@@ -38,11 +38,12 @@ def main():
     holidays = parse_json(holidays_json)
     receivers = [TelegramMessageSender(chat_id, args.bot_token) for chat_id in args.chat_id]
     today = datetime.datetime.today().date()
+    holidays = [h for h in holidays if (h.date - today).days < args.days_ahead]
+    print(f"Upcoming holidays {holidays}")
     for h in holidays:
-        if 0 < (h.date - today).days < args.days_ahead:
-            print(f"Sending {h} to {receivers}")
-            for receiver in receivers:
-                receiver.send(format_telegram_message(h))
+        print(f"Sending {h} to {receivers}")
+        for receiver in receivers:
+            receiver.send(format_telegram_message(h))
 
 
 if __name__ == '__main__':
